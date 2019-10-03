@@ -64,6 +64,8 @@ let heroY = canvas.height / 2;
 let monsterX = 100;
 let monsterY = 100;
 
+let score = 0
+
 /** 
  * Keyboard Listeners
  * You can safely ignore this part, for now. 
@@ -108,18 +110,38 @@ let update = function () {
     heroX += 5;
   }
 
+  // Hero going left off screen
+  if (heroX <= 0) {
+    heroX = canvas.width - 10
+  }
+
+  // Hero going right off screen
+  if (heroX >= canvas.width) {
+    heroX = 0
+  }
+
+  // Hero going up off screen
+  if (heroY <= 0) {
+    heroY = canvas.height - 10
+  }
+
+  // Hero going down off screen
+  if (heroY >= canvas.height) {
+    heroY = 0
+  }
+
   // Check if player and monster collided. Our images
   // are about 32 pixels big.
-  if (
-    heroX <= (monsterX + 32)
-    && monsterX <= (heroX + 32)
-    && heroY <= (monsterY + 32)
-    && monsterY <= (heroY + 32)
-  ) {
-    // Pick a new location for the monster.
-    // Note: Change this to place the monster at a new, random location.
-    monsterX = monsterX + 50;
-    monsterY = monsterY + 70;
+  // console.log('keysDown', keysDown)
+  const heroHasCaughtMonster = heroX <= (monsterX + 32)
+  && monsterX <= (heroX + 32)
+  && heroY <= (monsterY + 32)
+  && monsterY <= (heroY + 32)
+  if (heroHasCaughtMonster) {
+    score += 1
+    monsterX = Math.floor(Math.random() * canvas.width - 10)
+    monsterY = Math.floor(Math.random() * canvas.height - 10)
+    console.log('score', score)
   }
 };
 
