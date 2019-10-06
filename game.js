@@ -1,30 +1,66 @@
-/*
-  Code modified from:
-  http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
-  using graphics purchased from vectorstock.com
-*/
-
-/* Initialization.
-Here, we create and add our "canvas" to the page.
-We also load all of our images. 
-*/
-
-
 let canvas;
 let ctx;
-
 canvas = document.createElement("canvas");
 ctx = canvas.getContext("2d");
 canvas.width = 512;
 canvas.height = 480;
 document.body.appendChild(canvas);
-
-let bgReady, heroReady, monsterReady;
-let bgImage, heroImage, monsterImage;
+let bgReady, heroReady, monsterReady, rockReady;
+let bgImage, heroImage, monsterImage, rockImage;
 
 let startTime = Date.now();
-const SECONDS_PER_ROUND = 30;
+const SECONDS_PER_ROUND = 20;
 let elapsedTime = 0;
+
+let score = 0
+let heroX = canvas.width / 2;
+let heroY = canvas.height / 2;
+let rockX = 100;
+let rockY = 100;
+let monsterX = 249;
+let monsterY = 100;
+let keysDown = {};
+let feedback = document.getElementById("feedback")
+const timeFeedback = document.getElementById("timeFeedback")
+const topScore = document.getElementById('topScore');
+const topUser = document.getElementById('topUser')
+let timer = document.getElementById('timeFeedback')
+let progressValue = 0;
+
+function setUsername() {
+  let enterUsername = document.getElementById("playerName").value;
+  document.getElementById("username").innerHTML = enterUsername;
+}
+function progressBar() {
+  var progress = document.getElementById('progress');
+  setInterval(function () {
+    if (progressValue < 100) {
+      progressValue++;
+      progress.value = progressValue;
+    }
+  }, 1000);
+}
+function getAppState() {
+  return JSON.parse(localStorage.getItem('appState')) || {
+    User: document.getElementById('playerName').value || 'Anonymous',
+    currentHighScore: 0,
+  }
+}
+function saveAppState(appState) {
+  return localStorage.setItem('appState', JSON.stringify(appState))
+}
+function showTopScore() {
+  const appState = getAppState()
+  topScore.innerHTML = appState.currentHighScore
+  topUser.innerHTML = appState.User
+}
+// function loadRock() {
+//   rockImage = new Image();
+//   rockImage.onload = function () {
+//     rockReady = true;
+//   };
+//   rockImage.src = "images/rock.PNG";
+// }
 
 function loadImages() {
   bgImage = new Image();
@@ -33,46 +69,25 @@ function loadImages() {
     bgReady = true;
   };
   bgImage.src = "images/background.png";
-  heroImage = new Image();
-  heroImage.onload = function () {
-    // show the hero image
-    heroReady = true;
+
+  rockImage = new Image();
+  rockImage.onload = function () {
+    rockReady = true;
   };
-  heroImage.src = "images/hero.png";
+  rockImage.src = "images/rock.PNG";
 
   monsterImage = new Image();
   monsterImage.onload = function () {
-    // show the monster image
     monsterReady = true;
   };
   monsterImage.src = "images/monster.png";
+
+  heroImage = new Image();
+  heroImage.onload = function () {
+    heroReady = true;
+  };
+  heroImage.src = "images/hero.png";
 }
-
-/** 
- * Setting up our characters.
- * 
- * Note that heroX represents the X position of our hero.
- * heroY represents the Y position.
- * We'll need these values to know where to "draw" the hero.
- * 
- * The same applies to the monster.
- */
-
-let heroX = canvas.width / 2;
-let heroY = canvas.height / 2;
-
-let monsterX = 100;
-let monsterY = 100;
-
-let score = 0
-
-/** 
- * Keyboard Listeners
- * You can safely ignore this part, for now. 
- * 
- * This is just to let JavaScript know when the user has pressed a key.
-*/
-let keysDown = {};
 function setupKeyboardListeners() {
   // Check for keys pressed where key represents the keycode captured
   // For now, do not worry too much about what's happening here. 
@@ -84,102 +99,158 @@ function setupKeyboardListeners() {
     delete keysDown[key.keyCode];
   }, false);
 }
-
-
-/**
- *  Update game objects - change player position based on key pressed
- *  and check to see if the monster has been caught!
- *  
- *  If you change the value of 5, the player will move at a different rate.
- */
-let update = function () {
-  // Update the time.
-  elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-
-
-  if (38 in keysDown) { // Player is holding up key
-    heroY -= 5;
+function moveHero() {
+  if (score <= 2) {
+    if (38 in keysDown) {
+      heroY -= 5;
+    }
+    if (40 in keysDown) {
+      heroY += 5;
+    }
+    if (37 in keysDown) {
+      heroX -= 5;
+    }
+    if (39 in keysDown) {
+      heroX += 5;
+    }
   }
-  if (40 in keysDown) { // Player is holding down key
-    heroY += 5;
+  if (score > 2) {
+    if (38 in keysDown) {
+      heroY -= 7;
+    }
+    if (40 in keysDown) {
+      heroY += 7;
+    }
+    if (37 in keysDown) {
+      heroX -= 7;
+    }
+    if (39 in keysDown) {
+      heroX += 7;
+    }
   }
-  if (37 in keysDown) { // Player is holding left key
-    heroX -= 5;
-  }
-  if (39 in keysDown) { // Player is holding right key
-    heroX += 5;
+  if (score > 7) {
+    if (38 in keysDown) {
+      heroY -= 10;
+    }
+    if (40 in keysDown) {
+      heroY += 10;
+    }
+    if (37 in keysDown) {
+      heroX -= 10;
+    }
+    if (39 in keysDown) {
+      heroX += 10;
+    }
   }
 
-  // Hero going left off screen
+}
+
+function heroLimitArea() {
   if (heroX <= 0) {
-    heroX = canvas.width - 10
-  }
-
-  // Hero going right off screen
-  if (heroX >= canvas.width) {
     heroX = 0
   }
-
-  // Hero going up off screen
-  if (heroY <= 0) {
-    heroY = canvas.height - 10
+  if (heroX >= canvas.width - 28) {
+    heroX = canvas.width - 28
   }
-
-  // Hero going down off screen
-  if (heroY >= canvas.height) {
+  if (heroY <= 0) {
     heroY = 0
   }
+  if (heroY >= canvas.height - 30) {
+    heroY = canvas.height - 30
+  }
+}
+function charactersInteraction() {
+  const heroHasCaughtMonster = heroX <= (monsterX + 15)
+    && monsterX <= (heroX + 15)
+    && heroY <= (monsterY + 15)
+    && monsterY <= (heroY + 15)
 
-  // Check if player and monster collided. Our images
-  // are about 32 pixels big.
-  // console.log('keysDown', keysDown)
-  const heroHasCaughtMonster = heroX <= (monsterX + 32)
-  && monsterX <= (heroX + 32)
-  && heroY <= (monsterY + 32)
-  && monsterY <= (heroY + 32)
+  const heroHastouchRock = heroX <= (rockX + 15)
+    && rockX <= (heroX + 15)
+    && heroY <= (rockY + 15)
+    && rockY <= (heroY + 15)
+
   if (heroHasCaughtMonster) {
     score += 1
-    monsterX = Math.floor(Math.random() * canvas.width - 10)
-    monsterY = Math.floor(Math.random() * canvas.height - 10)
-    console.log('score', score)
+    monsterX = Math.floor(Math.random() * 480);
+    monsterY = Math.floor(Math.random() * 450);
+    rockX = Math.floor(Math.random() * 480);
+    rockY = Math.floor(Math.random() * 450);
+    document.getElementById("currentScore").innerHTML = score;
+    const appState = getAppState()
+    if (appState.currentHighScore < score) {
+      appState.currentHighScore = score;
+      console.log('hauid', appState)
+      saveAppState(appState)
+    }
   }
-};
+  if (heroHastouchRock) {
+    score -= 1
+    rockX = Math.floor(Math.random() * 480);
+    rockY = Math.floor(Math.random() * 450);
+    document.getElementById("currentScore").innerHTML = score;
+    const appState = getAppState()
+    if (appState.currentHighScore < score) {
+      appState.currentHighScore = score;
+      console.log('hauid', appState)
+      saveAppState(appState)
+    }
+  }
+}
+function update() {
+  elapsedTime = 0
+  elapsedTime = Math.floor((Date.now() - startTime) / 1000);
 
-/**
- * This function, render, runs as often as possible.
- */
-var render = function () {
+  if (elapsedTime >= SECONDS_PER_ROUND) {
+    return;
+  }
+  moveHero()
+  heroLimitArea()
+  charactersInteraction()
+  showTopScore()
+
+}
+function render() {
   if (bgReady) {
     ctx.drawImage(bgImage, 0, 0);
-  }
-  if (heroReady) {
-    ctx.drawImage(heroImage, heroX, heroY);
   }
   if (monsterReady) {
     ctx.drawImage(monsterImage, monsterX, monsterY);
   }
-  ctx.fillText(`Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
-};
-
-/**
- * The main game loop. Most every game will have two distinct parts:
- * update (updates the state of the game, in this case our hero and monster)
- * render (based on the state of our game, draw the right things)
- */
-var main = function () {
-  update(); 
+  if (score >= 3) {
+    if (rockReady) {
+      ctx.drawImage(rockImage, rockX, rockY);
+    }
+  }
+  if (score >= 6) {
+    if (rockReady) {
+      ctx.drawImage(rockImage, rockX, rockY);
+    }
+  }
+  if (heroReady) {
+    ctx.drawImage(heroImage, heroX, heroY);
+  }
+  if (elapsedTime <= 19) {
+    timer.innerHTML = `${SECONDS_PER_ROUND - elapsedTime} sec`
+  } else {
+    timer.innerHTML = "Game Over"
+  }
+}
+function main() {
+  update();
   render();
-  // Request to do this again ASAP. This is a special method
-  // for web browsers. 
   requestAnimationFrame(main);
 };
-
-// Cross-browser support for requestAnimationFrame.
-// Safely ignore this line. It's mostly here for people with old web browsers.
-var w = window;
+const w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
-// Let's play this game!
+
 loadImages();
-setupKeyboardListeners();
 main();
+setupKeyboardListeners();
+progressBar();
+
+
+
+
+

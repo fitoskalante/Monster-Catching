@@ -1,10 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Best Game Ever!</title>
-  </head>
-  <body>
-    <script src="game.js"></script>
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://unpkg.com/nes.css@2.2.1/css/nes.min.css" rel="stylesheet" />
+  <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
+  <link href="https://unpkg.com/nes.css/css/nes-core.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <title>Best Game Ever!</title>
+</head>
+
+<body>
+
+  <div class="main-container container-fluid d-flex flex-row text-center pt-3 justify-content-center">
+    <div class="left-side d-flex flex-column text-center align-items-center col-6 ">
+      <h1 class="my-5">HELP RIK!!</h1>
+      <div class="container-fluid d-flex flex-row justify-content-around align-content-center">
+        <input class="nes-input pr-5" type="text" id="playerName" placeholder="Your Name" value="">
+        <button onclick="setUsername()" class="nes-btn is-success" id="btnUsername">Enter</button>
+      </div>
+      <p class="nes-balloon from-left nes-pointer mt-3">
+        Hi <span id="username">buddy</span>! I am a terrible golfer. Can you help me putting the ball in the hole?
+      </p>
+      <img class="" src="images/rik.gif" class="rik" alt="">
+      <h3>Holes: <span id="currentScore">0</span> </h3>
+
+      <button onclick="window.location.reload(false);" class="nes-btn is-warning" id="btnPlay">Play</button>
+      <button onclick="window.location.reload(true);" class="nes-btn is-error" id="btnRetry">Retry</button>
+
+    </div>
+
+    <div class="right-side d-flex flex-column col-6">
+      <p> Top Record: <i class="nes-icon trophy is-medium"></i>
+        <span class="top-score" id="topUser"></span>
+        <span class="top-score" id="topScore"></span>
+        Holes
+      </p>
+      <div class="time-bar d-flex flex-row align-items-center">
+        <progress class="nes-progress is-error col-6" value="0" max="20" id="progress"></progress>
+        <h3 class="col-6" id="timeFeedback">20 sec</h3>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+  <script src="game.js"></script>
+</body>
+
 </html>

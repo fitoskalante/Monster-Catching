@@ -1,0 +1,81 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Press Start 2P', monospace !important;
+    font-weight: 600 !important;
+}
+
+body {
+    background-color: lightgreen !important;
+}
+
+.main-container {
+    height: 100%;
+    width: 90%;
+}
+
+.left-side {
+    height: 100%;
+    padding-right: 50px;
+}
+
+.right-side {
+    height: 100%;
+    padding-right: 120px;
+    padding-left: 0px;
+    padding-top: 30px
+}
+
+canvas {
+    display: flex;
+    border: 10px solid black;
+    z-index: -1;
+    position: fixed;
+    top: 200px;
+    margin-left: 700px;
+}
+
+.rik {
+    height: auto;
+    width: 150px;
+    margin-top: 0px !important;
+
+}
+
+button {
+    width: 300px;
+    margin-top: 20px !important;
+}
+
+#btnUsername {
+    width: 200px;
+    margin-top: 4px !important;
+}
+
+input {
+    max-width: 250px !important;
+    min-width: 250px !important;
+}
+
+progress {
+    width: 300px !important;
+    padding: 0px !important;
+    height: 20px !important;
+}
+
+.time-bar {
+    height: 75px;
+}
+
+h1 { 
+    font-size: 50px;
+    text-shadow: 		
+    -3px -3px 0 white,
+    3px -3px 0 white,
+    -3px 3px 0 white,
+    3px 3px 0 white;
+}
+
+.top-score {
+    font-size: 16px;
+}
