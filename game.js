@@ -163,6 +163,7 @@ function charactersInteraction() {
 
   if (heroHasCaughtMonster) {
     score += 1
+    document.getElementById('feedback').innerHTML = "Well Done!!"
     monsterX = Math.floor(Math.random() * 480);
     monsterY = Math.floor(Math.random() * 450);
     rockX = Math.floor(Math.random() * 480);
@@ -177,6 +178,7 @@ function charactersInteraction() {
   }
   if (heroHastouchRock) {
     score -= 1
+    document.getElementById('feedback').innerHTML = "Don't touch the rocks! They dicount holes"
     rockX = Math.floor(Math.random() * 480);
     rockY = Math.floor(Math.random() * 450);
     document.getElementById("currentScore").innerHTML = score;

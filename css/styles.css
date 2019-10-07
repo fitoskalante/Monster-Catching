@@ -35,6 +35,10 @@ canvas {
     margin-left: 700px;
 }
 
+.feedback-box {
+    height: 50px;
+}
+
 .rik {
     height: auto;
     width: 150px;
