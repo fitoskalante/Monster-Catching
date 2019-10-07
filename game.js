@@ -54,14 +54,6 @@ function showTopScore() {
   topScore.innerHTML = appState.currentHighScore
   topUser.innerHTML = appState.User
 }
-// function loadRock() {
-//   rockImage = new Image();
-//   rockImage.onload = function () {
-//     rockReady = true;
-//   };
-//   rockImage.src = "images/rock.PNG";
-// }
-
 function loadImages() {
   bgImage = new Image();
   bgImage.onload = function () {
@@ -144,7 +136,6 @@ function moveHero() {
   }
 
 }
-
 function heroLimitArea() {
   if (heroX <= 0) {
     heroX = 0
